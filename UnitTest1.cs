@@ -3,6 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace TripAdvisorTests
 {
@@ -84,6 +85,22 @@ namespace TripAdvisorTests
             IReadOnlyCollection<IWebElement> reviews = driver.FindElements(By.XPath("/html/body/div[4]/div[2]/div/div[2]/div/div"));
 
             Assert.Greater(reviews.Count, 0);
+        }
+        [Test(Description = "Czy w recennzji linii lotniczych, jest opisane 'miejsce na nogi'"), Order(5)]
+        public void Test_IsTherePlaceforLegs()
+        {
+            IWebElement trip = driver.FindElement(By.XPath("/html/body/div[4]/div[1]/div[1]/div[2]/div/div[2]/div[2]/header/div/nav/div[2]/a[2]"));
+            trip.Click();
+            IWebElement flight = driver.FindElement(By.XPath("/html/body/div[1]/div/div[1]/div[2]/div/div[2]/div[2]/div/div/div/ul[1]/li[4]/div/a"));
+            flight.Click();
+            IWebElement flightReview = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]/div[2]/div/div[2]/div/div/div[1]/div/div[1]/a"));
+            flightReview.Click();
+            IWebElement seeReview = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[2]/div[2]/div/div/div[2]/div/div[2]/a[2]"));
+            seeReview.Click();
+
+            WebClient client = new WebClient();
+            string content = client.DownloadString("https://pl.tripadvisor.com/Airline_Review-d8728984-Reviews-Adria-Airways-No-Longer-Operating");
+            Assert.That(content, Contains.Substring("Miejsce na nogi"));
         }
     }
 }
