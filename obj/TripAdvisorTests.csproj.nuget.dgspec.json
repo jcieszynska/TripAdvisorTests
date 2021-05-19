@@ -59,6 +59,10 @@
               "target": "Package",
               "version": "[3.16.1, )"
             },
+            "Selenium.Essentials": {
+              "target": "Package",
+              "version": "[1.0.2.1, )"
+            },
             "Selenium.WebDriver": {
               "target": "Package",
               "version": "[3.141.0, )"
