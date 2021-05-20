@@ -47,25 +47,31 @@ namespace TripAdvisorTests
             IReadOnlyCollection<IWebElement> attractions = driver.FindElements(By.XPath("/html/body/div/main/div[6]/div[2]/div/div[2]/div/div[1]/div/ul/li/div[1]/a/div[1]/div[1]/div/img"));
             Assert.IsTrue(attractions.Count > 1);
         }
-        [Test(Description ="Look for hotel nearby with additional filters"),Order(3)]
-        public void searchTest_HotelFound()
+        [Test(Description ="Look for 4* hotels nearby with additional filters"),Order(4)]
+        public void searchTest_HotelsFound()
         {
             driver.Navigate().GoToUrl(URL);
 
-            driver.FindElement(By.ClassName("_1ulyogkG")).Click(); //Hotels
-            driver.FindElement(By.ClassName("_1c2ocG0l")).Click(); //NearbyButton
+            var hotelButton = driver.FindElement(By.ClassName("_1ulyogkG"));
+            hotelButton.Click();
+            var nearbyButton = driver.FindElement(By.ClassName("_1c2ocG0l"));
+            nearbyButton.Click(); //NearbyButton
 
-            driver.FindElement(By.XPath("/html/body/div[4]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[3]/div[3]/div[2]")).Click(); //dateIn
-            driver.FindElement(By.XPath("html/body/div[4]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[3]/div[3]/div[3]")).Click(); //dateOut
-            //driver.FindElement(By.CssSelector("ui_button primary fullwidth")).Submit();
+            var dateIn = driver.FindElement(By.XPath("/html/body/div[4]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[3]/div[3]/div[2]"));
+            dateIn.Click();
+            var dateOut = driver.FindElement(By.XPath("html/body/div[4]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[3]/div[3]/div[3]"));
+            dateOut.Click();
+            var starsCheckbox = driver.FindElement(By.XPath("/html/body/div[2]/div[1]/div[1]/div/div[1]/div[1]/div[5]/div/div/div[2]/div[4]/div[2]/div[1]/div/label"));
+            starsCheckbox.Click();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            IReadOnlyCollection<IWebElement> hotels = driver.FindElements(By.XPath("/html/body/div[2]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[4]/div/div/div[1]/div[2]/div[1]/div/a"));
+            Assert.IsTrue(hotels.Count > 1);
 
-            //TBC
         }
-        [Test(Description = "Does searchbar searches for typed in location"),Order(4)]
+        [Test(Description = "Does searchbar searches for typed in location"),Order(3)]
         public void searchTest_SearchSuccessfull()
         {
             driver.Navigate().GoToUrl(URL);
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
             IWebElement searchInput = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/main/div[3]/div/div/div[2]/form/input[1]")));
             searchInput.SendKeys("Meksyk");
